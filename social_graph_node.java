@@ -9,6 +9,13 @@ public class social_graph_node {
     public String getName() {
         return name;
     }
+    
+    //by default, this returns the string representation of the class
+    //but now it should just return the name associated with this class
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 
 

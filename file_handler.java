@@ -29,7 +29,6 @@ public class file_handler {
                 lines.add(line);
             }
 
-            // Close the Scanner
             scanner.close();
 
         } 
@@ -41,6 +40,36 @@ public class file_handler {
 
     public ArrayList<String> getLines() {
         return lines;
+    }
+
+    public String getFirstWord(String input) {
+        Scanner scanner = new Scanner(input);
+        String firstWord = scanner.next();
+        scanner.close();
+        return firstWord;
+    }
+
+    public ArrayList<String> getNonFirstWords(String input) {
+        ArrayList<String> words = new ArrayList<>();
+        Scanner scanner = new Scanner(input);
+        //skip first word
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+        //get rest of line
+        while (scanner.hasNext()) {
+            words.add(scanner.next());
+        }
+        scanner.close();
+        return words;
+    }
+
+    public ArrayList<String> getUniqueUsers() {
+        ArrayList<String> uniqueUsers = new ArrayList<>();
+        for (String line : lines) {
+            uniqueUsers.add(getFirstWord(line));
+        }
+        return uniqueUsers;
     }
 
 }

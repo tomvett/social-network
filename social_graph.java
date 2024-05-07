@@ -2,8 +2,8 @@ import java.util.*;
 
 public class social_graph {
 
-    //map is good
-    private Map<social_graph_node, List<social_graph_node>> adjacencyList;
+    //map is good (fast data access and unique kjey value pairs)
+    private HashMap<social_graph_node, List<social_graph_node>> adjacencyList;
 
     public social_graph() {
         adjacencyList = new HashMap<>();
@@ -40,7 +40,7 @@ public class social_graph {
     public void printGraph() {
         for (social_graph_node node : adjacencyList.keySet()) {
             List<social_graph_node> followees = adjacencyList.get(node);
-            System.out.print(node + " follows: ");
+            System.out.print(node + " follows: "); //this implicitly call toString thats being overriden in the node class
             for (social_graph_node followee : followees) {
                 System.out.print(followee + " ");
             }
