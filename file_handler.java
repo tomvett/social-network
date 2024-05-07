@@ -26,7 +26,7 @@ public class file_handler {
             //reads each line from the file and adds it to the arraylist
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                lines.add(line); // Add each line to the ArrayList
+                lines.add(line);
             }
 
             // Close the Scanner
