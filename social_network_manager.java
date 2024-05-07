@@ -8,6 +8,7 @@ public class social_network_manager {
         //this is where I control my social network and the flow of the program
         //this is probably over the top but id much rather write more code and whack the components into their own clases
         //ive made the assumption everyone has a unique name
+        //I have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
         
         String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network1.txt"; ///TESTING FILE PATH
 
@@ -19,7 +20,7 @@ public class social_network_manager {
         //add everyone on the network to the social graph
         for (String name : fileHandler.getUniqueUsers()) {
             social_graph_node user = new social_graph_node(name);
-            putNameUser(name, user);
+            putNameUser(name, user); //adds a new user to the hashmap that links the names (strings) to the nodes
             SocialGraph.addNode(user);
         }
 
@@ -34,12 +35,35 @@ public class social_network_manager {
 
         SocialGraph.printGraph(); //debug
 
-        //now I can start on the tasks
+        //task1
+        task1(SocialGraph);
+
+        //task2
+        task2(SocialGraph);
+
+        //task3
+        task3(SocialGraph);
+
 
     }
 
     private static void putNameUser(String name, social_graph_node user) {
         nameUserMap.put(name, user);
+    }
+
+    private static void task1(social_graph SocialGraph) {
+        double density = SocialGraph.calculateDensity();
+        System.out.println("1) " + density);
+    }
+
+    private static void task2(social_graph SocialGraph) {
+        social_graph_node node = SocialGraph.getNodeWithMostEdgesTo();
+        System.out.println("2) " + node);
+    }
+    
+    private static void task3(social_graph SocialGraph) {
+        social_graph_node node = SocialGraph.getNodeWithMostEdgesAway();
+        System.out.println("3) " + node);
     }
 
 
