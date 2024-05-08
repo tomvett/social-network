@@ -130,4 +130,73 @@ public class social_graph {
         return returnNode;
     }
 
+    //i cannot figure this out, why doesnt this work
+    public ArrayList<social_graph_node> findNodesAtTwoDeg1(social_graph_node nodeIn) {
+        ArrayList<social_graph_node> result = new ArrayList<>();
+        HashSet<social_graph_node> visited = new HashSet<>();
+
+        //get the direct neighbors
+        ArrayList<social_graph_node> firstDegNeighbors = adjacencyList.getOrDefault(nodeIn, new ArrayList<>());
+
+        //go through all the 2nd degree nodes now
+        for (social_graph_node neighbor : firstDegNeighbors) {
+            ArrayList<social_graph_node> secondDegNeighbors = adjacencyList.getOrDefault(neighbor, new ArrayList<>());
+            for (social_graph_node neighbor2 : secondDegNeighbors) {
+                if (!visited.contains(neighbor2) && !firstDegNeighbors.contains(neighbor2) && !neighbor2.equals(nodeIn)){
+                    result.add(neighbor2);
+                    visited.add(neighbor2);
+                }
+            }
+        }
+        return result;
+    }
+
+    //neither of these work. I dont know what I am doing wrong
+    public ArrayList<social_graph_node> findNodesAtTwoDeg(social_graph_node nodeIn) {
+        ArrayList<social_graph_node> result = new ArrayList<>();
+
+        //loop over each friend of nodeIn and I GIVE UP
+        for (social_graph_node L_node : adjacencyList.getOrDefault(nodeIn, new ArrayList<>())) {
+            for (social_graph_node L_node2 : adjacencyList.keySet()) {
+                ArrayList<social_graph_node> L_node2AdjacencyList = adjacencyList.getOrDefault(L_node2, new ArrayList<>());
+                if (!L_node2.equals(nodeIn)) {
+                    if (L_node2AdjacencyList.contains(L_node) && !L_node2AdjacencyList.contains(nodeIn)) {
+                        result.add(L_node2);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public double calculateMedianConnections() {
+        ArrayList<Integer> connectionCounts = new ArrayList<>();
+
+        //count connections from each node
+        for (ArrayList<social_graph_node> nodes : adjacencyList.values()) {
+            int numConnections = nodes.size();
+            connectionCounts.add(numConnections);
+        }
+
+        //perform a sort (apparently its merge sort)
+        Collections.sort(connectionCounts);
+
+        //then just find the midpoint and calculate midpoint
+        int size = connectionCounts.size();
+        //safety first
+        if (size == 0) {
+            return 0.0;
+        }
+
+        if (size % 2 == 1) {
+            //this means odd median, so get the middle value
+            int index = size / 2;
+            return connectionCounts.get(index);
+        } else {
+            //even number of elements so need to do some maths with two elements in the middle(mid1 and mid2)
+            int mid1 = size / 2 - 1;
+            int mid2 = size / 2;
+            return (connectionCounts.get(mid1) + connectionCounts.get(mid2)) / 2.0;
+        }
+    }
 }

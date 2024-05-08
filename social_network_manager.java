@@ -10,7 +10,7 @@ public class social_network_manager {
         //ive made the assumption everyone has a unique name
         //I have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
         
-        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network1.txt"; ///TESTING FILE PATH
+        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network2.txt"; ///TESTING FILE PATH
 
         //init
         file_handler fileHandler = new file_handler(filePath);
@@ -44,6 +44,11 @@ public class social_network_manager {
         //task3
         task3(SocialGraph);
 
+        //task4
+        //task4(SocialGraph, fileHandler);
+
+        //task5
+        task5(SocialGraph);
 
     }
 
@@ -66,6 +71,22 @@ public class social_network_manager {
         System.out.println("3) " + node);
     }
 
+    private static void task4(social_graph SocialGraph, file_handler fileHandler) {
+        //get the name of the first input person and then get their associated node on the graph
+        String FirstPerson = fileHandler.getFirstWord(fileHandler.getLines().get(0));
+        social_graph_node firstNode = nameUserMap.get(FirstPerson);
+
+        int numNodes = SocialGraph.findNodesAtTwoDeg(firstNode).size();
+        System.out.println("4) " + numNodes);
+
+        int numNodes2 = SocialGraph.findNodesAtTwoDeg1(firstNode).size();
+        System.out.println("4) " + numNodes2);
+    }
+
+    private static void task5(social_graph SocialGraph) {
+        double midpoint = SocialGraph.calculateMedianConnections();
+        System.out.println("5) " + midpoint);
+    }
 
 
     
