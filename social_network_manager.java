@@ -10,7 +10,7 @@ public class social_network_manager {
         //ive made the assumption everyone has a unique name
         //I have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
         
-        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network2.txt"; ///TESTING FILE PATH
+        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network1.txt"; ///TESTING FILE PATH
 
         //init
         file_handler fileHandler = new file_handler(filePath);
@@ -33,7 +33,7 @@ public class social_network_manager {
             }
         }
 
-        SocialGraph.printGraph(); //debug
+        // SocialGraph.printGraph(); //debug
 
         //task1
         task1(SocialGraph);
@@ -45,10 +45,13 @@ public class social_network_manager {
         task3(SocialGraph);
 
         //task4
-        //task4(SocialGraph, fileHandler);
+        task4(SocialGraph, fileHandler);
 
         //task5
         task5(SocialGraph);
+
+        //task6
+        task6(SocialGraph);
 
     }
 
@@ -78,9 +81,6 @@ public class social_network_manager {
 
         int numNodes = SocialGraph.findNodesAtTwoDeg(firstNode).size();
         System.out.println("4) " + numNodes);
-
-        int numNodes2 = SocialGraph.findNodesAtTwoDeg1(firstNode).size();
-        System.out.println("4) " + numNodes2);
     }
 
     private static void task5(social_graph SocialGraph) {
@@ -88,6 +88,10 @@ public class social_network_manager {
         System.out.println("5) " + midpoint);
     }
 
+    private static void task6(social_graph SocialGraph) {
+        social_graph_node nodeWithMostReach = SocialGraph.findPersonWithMaxReach();
 
+        System.out.println("6) " + nodeWithMostReach);
+    }
     
 }

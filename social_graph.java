@@ -2,7 +2,8 @@ import java.util.*;
 
 public class social_graph {
 
-    //map is good (fast data access and unique kjey value pairs)
+    //map is good (fast data access and unique key value pairs)
+    //the map stores a node and the nodes it follows
     private HashMap<social_graph_node, ArrayList<social_graph_node>> adjacencyList;
 
     public social_graph() {
@@ -33,11 +34,11 @@ public class social_graph {
     
     //made this to debug and ensure the graph is being created properly
     public void printGraph() {
-        for (social_graph_node node : adjacencyList.keySet()) {
-            List<social_graph_node> followees = adjacencyList.get(node);
-            System.out.print(node + " follows: "); //this implicitly call toString thats being overriden in the node class
-            for (social_graph_node followee : followees) {
-                System.out.print(followee + " ");
+        for (social_graph_node L_node : adjacencyList.keySet()) {
+            List<social_graph_node> nodes = adjacencyList.get(L_node);
+            System.out.print(L_node + ": "); //this implicitly calls toString thats being overriden in the node class
+            for (social_graph_node L_node2 : nodes) {
+                System.out.print(L_node2 + " ");
             }
             System.out.println(); //makes a new line
         }
@@ -130,39 +131,19 @@ public class social_graph {
         return returnNode;
     }
 
-    //i cannot figure this out, why doesnt this work
-    public ArrayList<social_graph_node> findNodesAtTwoDeg1(social_graph_node nodeIn) {
-        ArrayList<social_graph_node> result = new ArrayList<>();
-        HashSet<social_graph_node> visited = new HashSet<>();
-
-        //get the direct neighbors
-        ArrayList<social_graph_node> firstDegNeighbors = adjacencyList.getOrDefault(nodeIn, new ArrayList<>());
-
-        //go through all the 2nd degree nodes now
-        for (social_graph_node neighbor : firstDegNeighbors) {
-            ArrayList<social_graph_node> secondDegNeighbors = adjacencyList.getOrDefault(neighbor, new ArrayList<>());
-            for (social_graph_node neighbor2 : secondDegNeighbors) {
-                if (!visited.contains(neighbor2) && !firstDegNeighbors.contains(neighbor2) && !neighbor2.equals(nodeIn)){
-                    result.add(neighbor2);
-                    visited.add(neighbor2);
-                }
-            }
-        }
-        return result;
-    }
-
-    //neither of these work. I dont know what I am doing wrong
     public ArrayList<social_graph_node> findNodesAtTwoDeg(social_graph_node nodeIn) {
         ArrayList<social_graph_node> result = new ArrayList<>();
 
-        //loop over each friend of nodeIn and I GIVE UP
-        for (social_graph_node L_node : adjacencyList.getOrDefault(nodeIn, new ArrayList<>())) {
-            for (social_graph_node L_node2 : adjacencyList.keySet()) {
-                ArrayList<social_graph_node> L_node2AdjacencyList = adjacencyList.getOrDefault(L_node2, new ArrayList<>());
-                if (!L_node2.equals(nodeIn)) {
-                    if (L_node2AdjacencyList.contains(L_node) && !L_node2AdjacencyList.contains(nodeIn)) {
-                        result.add(L_node2);
-                    }
+        //get the followers of the main node
+        ArrayList<social_graph_node> connectedNodes = getAllConnectedNodes(nodeIn);
+        for (social_graph_node L_node : connectedNodes) {
+            //then get each of those followers followers
+            ArrayList<social_graph_node> connectedNodes2 = getAllConnectedNodes(L_node);
+            for (social_graph_node L_node2 : connectedNodes2) {
+                //then check that those followers arent the nodeIn and arent in the nodeIn's followers and haven't already been visited
+                if (!L_node2.equals(nodeIn) && !connectedNodes.contains(L_node2) && !result.contains(L_node2)) {
+                    System.out.println(L_node2);
+                    result.add(L_node2);
                 }
             }
         }
@@ -173,8 +154,8 @@ public class social_graph {
         ArrayList<Integer> connectionCounts = new ArrayList<>();
 
         //count connections from each node
-        for (ArrayList<social_graph_node> nodes : adjacencyList.values()) {
-            int numConnections = nodes.size();
+        for (social_graph_node node : adjacencyList.keySet()) {
+            int numConnections = getAllConnectedNodes(node).size();
             connectionCounts.add(numConnections);
         }
 
@@ -189,7 +170,7 @@ public class social_graph {
         }
 
         if (size % 2 == 1) {
-            //this means odd median, so get the middle value
+            //odd number of elements so just get the middle value
             int index = size / 2;
             return connectionCounts.get(index);
         } else {
@@ -197,6 +178,57 @@ public class social_graph {
             int mid1 = size / 2 - 1;
             int mid2 = size / 2;
             return (connectionCounts.get(mid1) + connectionCounts.get(mid2)) / 2.0;
+        }
+    }
+
+    public social_graph_node findPersonWithMaxReach() {
+        //this map will monitor 
+        HashMap<social_graph_node, ArrayList<social_graph_node>> reachabilityMap = new HashMap<>();
+        for (social_graph_node node : adjacencyList.keySet()) {
+            reachabilityMap.put(node, new ArrayList<>());
+        }
+
+        // Explore reachability for each person using DFS
+        for (social_graph_node node : adjacencyList.keySet()) {
+            dfs(node, reachabilityMap);
+        }
+
+        // Find the person with the maximum reach
+        social_graph_node nodeWithMaxReach = null;
+        int maxReach = 0;
+
+        for (social_graph_node node : reachabilityMap.keySet()) {
+            int reachSize = reachabilityMap.get(node).size();
+            System.out.println(node + ": " + reachSize);
+            if (reachSize > maxReach) {
+                maxReach = reachSize;
+                nodeWithMaxReach = node;
+            }
+        }
+
+        return nodeWithMaxReach;
+    }
+
+    //objects are passed by reference in java, so this function does NOT need a return type and can just modify the map
+    private void dfs(social_graph_node current, HashMap<social_graph_node, ArrayList<social_graph_node>> reachabilityMap) {
+        Stack<social_graph_node> stack = new Stack<>();
+        Set<social_graph_node> visited = new HashSet<>();
+
+        stack.push(current);
+
+        while (!stack.isEmpty()) {
+            social_graph_node node = stack.pop();
+
+            if (!visited.contains(node)) {
+                visited.add(node);
+                reachabilityMap.get(current).add(node);
+
+                for (social_graph_node neighbor : adjacencyList.get(node)) {
+                    if (!visited.contains(neighbor)) {
+                        stack.push(neighbor);
+                    }
+                }
+            }
         }
     }
 }
