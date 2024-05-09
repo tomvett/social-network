@@ -142,7 +142,6 @@ public class social_graph {
             for (social_graph_node L_node2 : connectedNodes2) {
                 //then check that those followers arent the nodeIn and arent in the nodeIn's followers and haven't already been visited
                 if (!L_node2.equals(nodeIn) && !connectedNodes.contains(L_node2) && !result.contains(L_node2)) {
-                    System.out.println(L_node2);
                     result.add(L_node2);
                 }
             }
@@ -181,54 +180,59 @@ public class social_graph {
         }
     }
 
-    public social_graph_node findPersonWithMaxReach() {
-        //this map will monitor 
-        HashMap<social_graph_node, ArrayList<social_graph_node>> reachabilityMap = new HashMap<>();
-        for (social_graph_node node : adjacencyList.keySet()) {
-            reachabilityMap.put(node, new ArrayList<>());
-        }
-
-        // Explore reachability for each person using DFS
-        for (social_graph_node node : adjacencyList.keySet()) {
-            dfs(node, reachabilityMap);
-        }
-
-        // Find the person with the maximum reach
-        social_graph_node nodeWithMaxReach = null;
-        int maxReach = 0;
-
-        for (social_graph_node node : reachabilityMap.keySet()) {
-            int reachSize = reachabilityMap.get(node).size();
-            System.out.println(node + ": " + reachSize);
-            if (reachSize > maxReach) {
-                maxReach = reachSize;
-                nodeWithMaxReach = node;
-            }
-        }
-
-        return nodeWithMaxReach;
-    }
-
-    //objects are passed by reference in java, so this function does NOT need a return type and can just modify the map
-    private void dfs(social_graph_node current, HashMap<social_graph_node, ArrayList<social_graph_node>> reachabilityMap) {
+    //objects are passed by reference (kinda) in java, so this function does NOT need a return value and can just modify the map directly
+    private void dfs(social_graph_node current, HashMap<social_graph_node, ArrayList<social_graph_node>> depthMap) {
         Stack<social_graph_node> stack = new Stack<>();
-        Set<social_graph_node> visited = new HashSet<>();
+        ArrayList<social_graph_node> visited = new ArrayList<>();
 
         stack.push(current);
 
+        //while the stack isnt empty (still unexplorerd nodes), keep doing the dfs
         while (!stack.isEmpty()) {
             social_graph_node node = stack.pop();
 
+            //check the node hasnt already been explorered
             if (!visited.contains(node)) {
+                //add it to the searched list and then add it to the reachability map
                 visited.add(node);
-                reachabilityMap.get(current).add(node);
+                depthMap.get(current).add(node);
 
-                for (social_graph_node neighbor : adjacencyList.get(node)) {
-                    if (!visited.contains(neighbor)) {
-                        stack.push(neighbor);
+                //find all the connected nodes to the current node (aka followers) and add them to the stack
+                for (social_graph_node connecected : getAllConnectedNodes(node)) {
+                    if (!visited.contains(connecected)) {
+                        stack.push(connecected);
                     }
                 }
             }
         }
     }
+
+    public social_graph_node findPersonWithMaxReach() {
+        //this map will keep track of the dfs size for each node
+        HashMap<social_graph_node, ArrayList<social_graph_node>> depthMap = new HashMap<>();
+        for (social_graph_node node : adjacencyList.keySet()) {
+            depthMap.put(node, new ArrayList<>());
+        }
+
+        //find the max influence for each person using a depth first search
+        for (social_graph_node node : adjacencyList.keySet()) {
+            dfs(node, depthMap);
+        }
+
+        //now just find the person with the max influence with a simple search
+        social_graph_node nodeWithMostInfluence = null;
+        int mostInfluence = 0;
+        for (social_graph_node node : depthMap.keySet()) {
+            int influenceSize = depthMap.get(node).size();
+            if (influenceSize == mostInfluence) {
+                nodeWithMostInfluence = compareAlphabeticallyTwoNodes(nodeWithMostInfluence, node);
+            }
+            else if (influenceSize > mostInfluence) {
+                mostInfluence = influenceSize;
+                nodeWithMostInfluence = node;
+            }
+        }
+        return nodeWithMostInfluence;
+    }
+
 }

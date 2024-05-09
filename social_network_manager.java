@@ -9,8 +9,9 @@ public class social_network_manager {
         //this is probably over the top but id much rather write more code and whack the components into their own clases
         //ive made the assumption everyone has a unique name
         //I have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
+        //i just finished and realised that its more efficient to have two edges between each node to show followers and following. if i have time i will remake it all :(
         
-        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network1.txt"; ///TESTING FILE PATH
+        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network2.txt"; ///TESTING FILE PATH
 
         //init
         file_handler fileHandler = new file_handler(filePath);
@@ -61,17 +62,17 @@ public class social_network_manager {
 
     private static void task1(social_graph SocialGraph) {
         double density = SocialGraph.calculateDensity();
-        System.out.println("1) " + density);
+        System.out.println("1) The density of the graph is: " + density);
     }
 
     private static void task2(social_graph SocialGraph) {
         social_graph_node node = SocialGraph.getNodeWithMostEdgesTo();
-        System.out.println("2) " + node);
+        System.out.println("2) The person with the most followers is: " + node);
     }
     
     private static void task3(social_graph SocialGraph) {
         social_graph_node node = SocialGraph.getNodeWithMostEdgesAway();
-        System.out.println("3) " + node);
+        System.out.println("3) The person who follows the most people is: " + node);
     }
 
     private static void task4(social_graph SocialGraph, file_handler fileHandler) {
@@ -80,18 +81,18 @@ public class social_network_manager {
         social_graph_node firstNode = nameUserMap.get(FirstPerson);
 
         int numNodes = SocialGraph.findNodesAtTwoDeg(firstNode).size();
-        System.out.println("4) " + numNodes);
+        System.out.println("4) The number of people at two degrees of seperation from the first person is: " + numNodes);
     }
 
     private static void task5(social_graph SocialGraph) {
         double midpoint = SocialGraph.calculateMedianConnections();
-        System.out.println("5) " + midpoint);
+        System.out.println("5) The median value for the number of followers is: " + midpoint);
     }
 
     private static void task6(social_graph SocialGraph) {
         social_graph_node nodeWithMostReach = SocialGraph.findPersonWithMaxReach();
 
-        System.out.println("6) " + nodeWithMostReach);
+        System.out.println("6) The person with the most influence is: " + nodeWithMostReach);
     }
     
 }
