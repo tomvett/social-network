@@ -18,6 +18,7 @@ public class file_handler {
             //explains itself
             if (!file.exists()) {
                 System.out.println("File doesn't exist");
+                System.exit(1);
                 return;
             }
 
