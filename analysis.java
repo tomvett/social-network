@@ -44,7 +44,7 @@ public class analysis {
             }
         }
 
-        // SocialGraph.printGraph(); //debug
+        //SocialGraph.printGraph(); //debug
 
         //task1
         task1(SocialGraph);
