@@ -10,7 +10,7 @@ public class analysis {
         -this is probably over the top but id much rather write more code and whack the components into their own clases
         -ive made the assumption everyone has a unique name
         -i have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
-        -i just finished and realised that its more efficient to have two edges between each node to show followers and following, but a bit late now
+        -i just finished and realised that its more efficient to have two edges between each node to show followers and following, but I think thats a bit much
         -this passes all tests!
          */
         
