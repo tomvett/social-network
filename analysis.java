@@ -1,20 +1,30 @@
 import java.util.*;
 
-public class social_network_manager {
+public class analysis {
 
     private static HashMap<String, social_graph_node> nameUserMap;
 
     public static void main(String[] args) {
-        //this is where I control my social network and the flow of the program
-        //this is probably over the top but id much rather write more code and whack the components into their own clases
-        //ive made the assumption everyone has a unique name
-        //I have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
-        //i just finished and realised that its more efficient to have two edges between each node to show followers and following. if i have time i will remake it all :(
+        /*
+        -this is where I control my social network and the flow of the program
+        -this is probably over the top but id much rather write more code and whack the components into their own clases
+        -ive made the assumption everyone has a unique name
+        -i have tried to keep the social_graph and social_graph_node class as generic as possible (to just be like a normal graph)
+        -i just finished and realised that its more efficient to have two edges between each node to show followers and following, but a bit late now
+        -this passes all tests!
+         */
         
-        String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network2.txt"; ///TESTING FILE PATH
+        //String filePath = "C:/Users/Tom/Downloads/test-socialnetworks/test-socialnetworks/social-network4.txt"; ///TESTING FILE PATH
+
+        //ensure that a file was passed to the program
+        if (args.length == 0) {
+            System.err.println("No file passed to the program");
+            System.exit(1);
+        }
 
         //init
-        file_handler fileHandler = new file_handler(filePath);
+        file_handler fileHandler = new file_handler(args[0]);
+        //file_handler fileHandler = new file_handler(filePath); //TESTING FILE PATH
         social_graph SocialGraph = new social_graph();
         nameUserMap = new HashMap<>(); //set the map to a value
 
